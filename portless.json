@@ -1,0 +1,5 @@
+{
+  "name": "coolify-demo",
+  "script": "dev:app",
+  "appPort": 9057
+}

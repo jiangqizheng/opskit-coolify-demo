@@ -1,0 +1,166 @@
+id: web
+name: TanStack Start Web
+status: v0-primary
+description: Primary proj-factory template for AI-assisted web products.
+runtime:
+  node: ">=24"
+  package_manager: pnpm
+included:
+  framework: TanStack Start
+  ui: React
+  router: TanStack Router
+  data: TanStack Query
+  ui_components: shadcn/ui
+  ui_primitives:
+    - alert
+    - button
+    - select
+    - sonner
+  e2e: Playwright
+  dev_preview: Portless
+  language: TypeScript
+  styling: Tailwind CSS
+  build_tool: Vite
+  dependencies:
+    - "@tanstack/react-start"
+    - "@tanstack/react-router"
+    - "@tanstack/react-query"
+    - "@tanstack/react-router-ssr-query"
+    - "@radix-ui/react-select"
+    - "@radix-ui/react-slot"
+    - react
+    - react-dom
+    - clsx
+    - class-variance-authority
+    - sonner
+    - tailwind-merge
+    - tslib
+    - tw-animate-css
+profiles:
+  client_state:
+    library: TanStack Store
+    use_when: Cross-component client-only workspace state is needed.
+  persistence:
+    selection: inferred-from-system-shape
+    hosted_database: PostgreSQL
+    device_database: SQLite
+    orm: Drizzle ORM
+    migrations: Drizzle Kit
+  validation:
+    library: Zod
+  forms:
+    library: TanStack Form
+  tables:
+    library: TanStack Table
+  authentication:
+    provider: Clerk
+    package: "@clerk/tanstack-react-start"
+source:
+  scaffold_command: npx @tanstack/cli@0.69.5 create my-tanstack-app --agent
+  intent_commands:
+    - pnpm run intent:list
+    - pnpm run intent -- load <package>#<skill>
+  verified_on: 2026-07-15
+  generated_project_name: my-tanstack-app
+provenance:
+  registry_field: template_provenance
+  schema_version: 1
+  revision: sha256
+  mutability: write-once
+validation:
+  automated:
+    - pnpm install --frozen-lockfile
+    - pnpm run verify
+    - pnpm run test:e2e
+    - pnpm run agent -- status
+  interactive:
+    - pnpm run dev
+    - pnpm run logs
+    - pnpm run preview:check
+validation_notes:
+  - pnpm run dev uses Portless 0.15.1 portless run --force; owner-scoped route cleanup prevents the replaced process from deleting the new route before scripts/dev.mjs starts the app.
+  - Foreground scripts/dev.mjs keeps current and previous dev output under .tmp/logs with a 25 MiB limit per file; PF-managed runs use one bounded PF-owned log instead of duplicating output.
+  - pnpm run logs reads a bounded tail and logs:follow reads only newly appended output for AI-agent debugging.
+  - pnpm run preview:check compares the fixed direct app URL with the Portless URL before blaming application code for a preview failure.
+  - Managed project ports start at 9030. This template placeholder uses 9030.
+  - scripts/dev.mjs kills the process occupying the assigned PORT before starting Vite with strictPort.
+  - TanStack Start's Vite plugin is the only route-tree generator; do not run the standalone Router CLI because it omits Start's route-tree footer.
+  - pnpm run verify checks that a Start/Vite build leaves routeTree.gen.ts stable, then runs typecheck and unit tests.
+  - pnpm run test:e2e passed after pnpm exec playwright install chromium.
+  - pnpm run test covers the shared top-right Sonner behavior and excludes Playwright e2e specs.
+  - tslib is explicit because the Radix Select scroll-lock dependency chain imports it during Vite 8 and Rolldown builds.
+  - Vitest discovery is bounded by vitest.config.ts so refs/ examples and other non-source trees are not collected.
+  - TypeScript keeps root config, scripts, source, and tests in scope while excluding dependencies, generated output, local caches, and refs/ reference repositories.
+  - pnpm run agent -- status is a project-scoped wrapper over the central PF Session ledger and passes with no active Session.
+  - pnpm run intent:list selects the TanStack package root, verifies installed dependencies, and invokes @tanstack/intent@0.3.5 on demand.
+docs:
+  durable:
+    - docs/agent-behavior-protocol.md
+    - docs/context.md
+    - docs/architecture.md
+    - docs/workflow.md
+    - docs/decisions.md
+    - docs/changelog.md
+local_directories:
+  docs_reference_assets:
+    purpose: Durable user-provided product, UI, interaction, visual, and content-quality reference assets.
+    gitignored: false
+    tracked_placeholder: docs/reference/assets/.gitkeep
+  refs:
+    purpose: Local-only reference projects, examples, and external code snapshots.
+    gitignored: true
+    tracked_placeholder: refs/.gitkeep
+agent_state:
+  authority: pf-central-session-ledger
+  feature_artifacts_dir: .agent/features
+  script: pnpm run agent -- <start|status|finish>
+env:
+  environment_model: inferred-from-system-shape
+  hosted_environments:
+    - local
+    - production
+  required: []
+  optional:
+    - DATABASE_URL
+    - CLERK_PUBLISHABLE_KEY
+    - CLERK_SECRET_KEY
+notes:
+  - During pre-launch development on developer-owned local environments, development efficiency is the highest priority; prefer the shortest reliable edit-run-observe loop and do not add speculative security, privacy, compatibility, approval, audit, or abstraction layers without a concrete current risk.
+  - Keep the minimum safety floor: never expose or commit secrets, never perform unconfirmed destructive or production writes, and do not weaken durable-data recovery; add broader hardening only when deployment, public/network exposure, multi-user access, shared machines, real users, or compliance creates the risk.
+  - Preserve the generated TanStack Start structure unless there is a clear reason to change it.
+  - Default generated project UI copy to Chinese unless the user explicitly requests another language.
+  - For productivity or efficiency-tool products, default to a persistent left navigation sidebar with a right-side content workspace unless the product goal clearly calls for another layout.
+  - Shared shadcn/ui primitives live in src/components/ui; Button, Select, Sonner, and the alert family are included in the base template.
+  - Route and feature code should use shared shadcn/ui primitives for standard controls; do not render raw browser controls such as select when an equivalent exists.
+  - One root-mounted Sonner Toaster owns transient action feedback and notifications at the top right; keep inline errors for field validation and blocking content regions.
+  - components.json configures project-local shadcn/ui additions; add missing primitives to src/components/ui before using them in features.
+  - src/lib/utils.ts provides the cn helper for shadcn/ui Tailwind class composition.
+  - The root route defines default route error and not-found UI using the shared alert primitive.
+  - For bugs and failing tests, agents should investigate root cause before fixing: read the full error, reproduce, check logs, trace data flow, and apply one focused fix.
+  - Negative test assertions are unnecessary in most cases; tests should verify positive contracts and current behavior by default, reserving negative assertions for core logic or real risk boundaries such as permissions, security, billing, data isolation, production write safety, protocol/internal-error leakage, and XSS-sensitive output.
+  - UI work should be hardened against long text, empty/loading/error states, mobile widths, text zoom, keyboard focus, and dark mode.
+  - Playwright tests should prefer role-based locators, user-visible assertions, and observable waits over fixed sleeps.
+  - Vitest should collect unit and component tests only from src and tests/unit; keep local reference repositories under refs/ outside test discovery.
+  - TypeScript should check repository-owned source, tests, scripts, and root configuration without collecting generated output, local caches, or refs/ reference repositories.
+  - Agents should use Playwright first for routine browser verification; interactive browser tools are only preferred for existing profile, extension, or logged-in-session workflows.
+  - PLAYWRIGHT_BASE_URL points Playwright at an existing server; PW_SKIP_WEBSERVER=1 skips the configured webServer only when that server has already been checked.
+  - Browser verification should start with target route, required state, identity or guest mode, and pass condition. Stop after repeated browser failures and collect logs, route/API responses, cookies/session state, and port ownership.
+  - pnpm run dev must be the one-command local startup path and should handle default port conflicts automatically.
+  - Use Portless preview URLs instead of raw port URLs when possible.
+  - Replace portless.json values with project registry values when generating a real project.
+  - Run pnpm run intent:list before substantial TanStack-specific edits and load matching guidance with pnpm run intent -- load <package>#<skill>; skip Intent for docs, copy, ordinary CSS, metadata, and generic scripts outside TanStack package contracts.
+  - TanStack Query owns server/cache state; TanStack Router owns URL/navigation state; TanStack Store is optional for cross-component client workspace state.
+  - Prefer small feature stores over a single global appStore, and do not mirror API responses into a client store.
+  - Infer the system shape before selecting persistence. Hosted products and shared services default to PostgreSQL; device-owned single-user applications default to SQLite; projects without authoritative structured data should not add a database.
+  - Clerk is the default auth profile when a project needs authentication.
+  - Use @clerk/tanstack-react-start for TanStack Start projects, not @clerk/nextjs.
+  - Playwright is installed for AI agent visual verification and screenshot-based acceptance checks.
+  - Preserve user-provided durable product, UI, interaction, visual, and content-quality reference assets under docs/reference/assets/ with concise reference notes under docs/reference/.
+  - Keep routine verification screenshots and temporary inspection outputs under .tmp/.
+  - Add database dependencies only when the project needs persistence. DATABASE_URL belongs to PostgreSQL profiles; device-local SQLite should use an application data path rather than a server database URL.
+  - Add project-specific env keys in generated projects, not in this base template.
+  - When a generated project needs external AI capabilities, check rskit first for provider/model research, recipes, adapter snippets, packages, or service guidance.
+  - Use the PF local value store and lifecycle process injection for registered-project local values; retain a repository-root .env.local only as an explicit root-loader compatibility path.
+  - Follow the recorded env.model; only local_production implies local plus production, while local-authoritative, device-local, and local-tool projects normally declare only local.
+  - In monorepos, do not create apps/*/.env.local or packages/*/.env.local; app/package processes receive values from the root process environment.
+  - Use refs/ for local reference projects and examples; keep its contents ignored and do not make runtime behavior depend on it.

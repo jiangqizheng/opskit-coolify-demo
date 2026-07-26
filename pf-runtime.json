@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "project": "coolify-demo",
+  "runtimeUnits": [
+    {
+      "id": "web",
+      "type": "web",
+      "cwd": ".",
+      "command": [
+        "pnpm",
+        "exec",
+        "portless",
+        "run",
+        "--force"
+      ],
+      "port": 9057,
+      "previewSlug": "coolify-demo",
+      "health": {
+        "type": "http",
+        "url": "http://127.0.0.1:9057/about"
+      },
+      "residentAllowed": true,
+      "default": true
+    }
+  ]
+}
