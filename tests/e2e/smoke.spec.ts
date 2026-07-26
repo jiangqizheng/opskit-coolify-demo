@@ -2,9 +2,20 @@ import { expect, test } from '@playwright/test'
 
 test('home page renders', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: /start simple/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /ship the small idea/i })).toBeVisible()
+  await expect(page.getByText('bj-2c8g', { exact: true })).toBeVisible()
   await expect(page.getByRole('region', { name: /^Notifications/ })).toBeAttached()
   await page.screenshot({ path: 'test-results/home.png', fullPage: true })
+})
+
+test('health endpoint returns an explicit readiness payload', async ({ request }) => {
+  const response = await request.get('/healthz')
+  expect(response.status()).toBe(200)
+  await expect(response).toBeOK()
+  const body = await response.json()
+  expect(body.status).toBe('ok')
+  expect(body.service).toBe('coolify-demo')
+  expect(body.region).toBeTruthy()
 })
 
 test('not found page renders alert', async ({ page }) => {

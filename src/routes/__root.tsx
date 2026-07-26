@@ -29,7 +29,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'OpsKit Demo · Coolify delivery proof',
+      },
+      {
+        name: 'description',
+        content: 'A small bilingual service deployed through OpsKit and Coolify Cloud.',
       },
     ],
     links: [
@@ -56,7 +60,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />

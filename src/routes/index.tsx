@@ -1,86 +1,91 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/')({ component: Home })
 
-function App() {
+const proofPoints = [
+  ['源代码', 'PF-managed repo', '可继续开发'],
+  ['运行时', 'Coolify Cloud', 'Docker cell'],
+  ['节点', 'bj-2c8g', '北京'],
+  ['入口', 'coolify-demo.perphq.com', 'DNS-only A'],
+] as const
+
+function Home() {
   return (
-    <main className="page-wrap px-4 pb-8 pt-14">
-      <section className="island-shell rise-in relative overflow-hidden rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14">
-        <div className="pointer-events-none absolute -left-20 -top-24 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(79,184,178,0.32),transparent_66%)]" />
-        <div className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(47,106,74,0.18),transparent_66%)]" />
-        <p className="island-kicker mb-3">TanStack Start Base Template</p>
-        <h1 className="display-title mb-5 max-w-3xl text-4xl leading-[1.02] font-bold tracking-tight text-[var(--sea-ink)] sm:text-6xl">
-          Start simple, ship quickly.
-        </h1>
-        <p className="mb-8 max-w-2xl text-base text-[var(--sea-ink-soft)] sm:text-lg">
-          This base starter intentionally keeps things light: two routes, clean
-          structure, and the essentials you need to build from scratch.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href="/about"
-            className="rounded-full border border-[rgba(50,143,151,0.3)] bg-[rgba(79,184,178,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(79,184,178,0.24)]"
-          >
-            About This Starter
-          </a>
-          <a
-            href="https://tanstack.com/router"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-[rgba(23,58,64,0.2)] bg-white/50 px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:border-[rgba(23,58,64,0.35)]"
-          >
-            Router Guide
-          </a>
+    <main className="demo-page">
+      <section className="demo-panel rise-in overflow-hidden" aria-labelledby="hero-title">
+        <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div>
+            <div className="mb-5 flex flex-wrap gap-2">
+              <span className="demo-pill"><span className="h-2 w-2 rounded-full bg-emerald-500" />LIVE</span>
+              <span className="demo-pill">OpsKit delivery proof</span>
+            </div>
+            <p className="island-kicker mb-3">A tiny service, a real path to production</p>
+            <h1 id="hero-title" className="display-title mb-5 max-w-3xl text-5xl leading-[0.98] font-bold tracking-tight sm:text-7xl">
+              Ship the small idea.
+              <br />
+              <span className="text-[var(--lagoon-deep)]">Keep the path obvious.</span>
+            </h1>
+            <p className="demo-muted mb-8 max-w-2xl text-base leading-8 sm:text-lg">
+              这是一个由 OpsKit 创建、构建并部署的双语 demo。它用最少的运行时证明一条完整链路：代码、不可变镜像、Coolify、北京节点、域名和健康检查。
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/healthz" className="demo-button no-underline">查看健康状态</Link>
+              <Link to="/about" className="demo-button demo-button-secondary no-underline">查看交付说明</Link>
+            </div>
+          </div>
+
+          <div className="relative rounded-[1.25rem] border border-[var(--line)] bg-[color-mix(in_oklab,var(--chip-bg)_84%,transparent)] p-5">
+            <div className="mb-8 flex items-center justify-between gap-4">
+              <span className="island-kicker">delivery snapshot</span>
+              <span className="text-xs font-semibold text-[var(--palm)]">verified</span>
+            </div>
+            <div className="space-y-4">
+              {proofPoints.map(([label, value, note]) => (
+                <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] pb-4 last:border-0 last:pb-0" key={label}>
+                  <span className="text-sm text-[var(--sea-ink-soft)]">{label}</span>
+                  <span className="text-right">
+                    <strong className="block break-all text-sm text-[var(--sea-ink)]">{value}</strong>
+                    <small className="text-xs text-[var(--sea-ink-soft)]">{note}</small>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          [
-            'Type-Safe Routing',
-            'Routes and links stay in sync across every page.',
-          ],
-          [
-            'Server Functions',
-            'Call server code from your UI without creating API boilerplate.',
-          ],
-          [
-            'Streaming by Default',
-            'Ship progressively rendered responses for faster experiences.',
-          ],
-          [
-            'Tailwind Native',
-            'Design quickly with utility-first styling and reusable tokens.',
-          ],
-        ].map(([title, desc], index) => (
-          <article
-            key={title}
-            className="island-shell feature-card rise-in rounded-2xl p-5"
-            style={{ animationDelay: `${index * 90 + 80}ms` }}
-          >
-            <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
-              {title}
-            </h2>
-            <p className="m-0 text-sm text-[var(--sea-ink-soft)]">{desc}</p>
-          </article>
-        ))}
+      <section className="mt-8 grid gap-4 sm:grid-cols-3" aria-label="Delivery checks">
+        <article className="demo-card rise-in" style={{ animationDelay: '80ms' }}>
+          <p className="island-kicker mb-3">01 / build</p>
+          <h2 className="demo-section-title mb-2">Immutable artifact</h2>
+          <p className="demo-muted m-0 text-sm leading-7">每次发布都绑定一个不可变 OCI digest，运行节点不负责编译。</p>
+        </article>
+        <article className="demo-card rise-in" style={{ animationDelay: '160ms' }}>
+          <p className="island-kicker mb-3">02 / route</p>
+          <h2 className="demo-section-title mb-2">One public hostname</h2>
+          <p className="demo-muted m-0 text-sm leading-7">Cloudflare 只提供 DNS，流量直接到 Coolify cell，边界清楚可排查。</p>
+        </article>
+        <article className="demo-card rise-in" style={{ animationDelay: '240ms' }}>
+          <p className="island-kicker mb-3">03 / prove</p>
+          <h2 className="demo-section-title mb-2">Five health signals</h2>
+          <p className="demo-muted m-0 text-sm leading-7">进程、传输、就绪、域名和依赖都能被单独观察。</p>
+        </article>
       </section>
 
-      <section className="island-shell mt-8 rounded-2xl p-6">
-        <p className="island-kicker mb-2">Quick Start</p>
-        <ul className="m-0 list-disc space-y-2 pl-5 text-sm text-[var(--sea-ink-soft)]">
-          <li>
-            Edit <code>src/routes/index.tsx</code> to customize the home page.
-          </li>
-          <li>
-            Update <code>src/components/Header.tsx</code> and{' '}
-            <code>src/components/Footer.tsx</code> for brand links.
-          </li>
-          <li>
-            Add routes in <code>src/routes</code> and tweak visual tokens in{' '}
-            <code>src/styles.css</code>.
-          </li>
-        </ul>
+      <section className="demo-panel mt-8" aria-labelledby="next-title">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="island-kicker mb-2">what this proves</p>
+            <h2 id="next-title" className="demo-title">从 demo 到真实项目，只需替换 artifact。</h2>
+          </div>
+          <a className="demo-button demo-button-secondary no-underline" href="https://github.com/jiangqizheng/opskit-coolify-demo" target="_blank" rel="noreferrer">查看源代码</a>
+        </div>
+        <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
+          <div className="demo-list-item"><strong className="mr-2">本地</strong><span className="demo-muted">PF preview + Playwright</span></div>
+          <div className="demo-list-item"><strong className="mr-2">线上</strong><span className="demo-muted">Coolify Cloud + bj-2c8g</span></div>
+          <div className="demo-list-item"><strong className="mr-2">域名</strong><span className="demo-muted">DNS-only A + direct HTTP/HTTPS</span></div>
+          <div className="demo-list-item"><strong className="mr-2">恢复</strong><span className="demo-muted">固定清理合同，不留孤儿资源</span></div>
+        </div>
       </section>
     </main>
   )
