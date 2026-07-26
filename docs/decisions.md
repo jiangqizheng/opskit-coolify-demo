@@ -23,12 +23,14 @@ notes or failed attempts.
   database, volume, backup contract, or migration path unless the product scope
   changes.
 
-## 2026-07-27 - Publish One Immutable AMD64 Image
+## 2026-07-27 - Publish One Immutable AMD64 Image From Beijing TCR
 
-- Decision: Publish a public GHCR image for `linux/amd64`, pin Coolify to its
-  OCI digest, and bake source release, region, and hostname into the artifact.
-- Reason: The Beijing cell should only pull and run an already verified image;
-  it should not compile source or infer release identity at runtime.
+- Decision: Publish a public Tencent Cloud TCR Personal Edition image from the
+  Beijing endpoint for `linux/amd64`, pin Coolify to its OCI digest, and bake
+  source release, region, and hostname into the artifact.
+- Reason: The Beijing cell should only pull and run an already verified image.
+  A same-region public repository keeps the pull path short and avoids storing
+  a long-lived registry credential in Coolify.
 - Impact: Every release starts from a clean Git commit, and OpsKit verifies the
   registry digest, Coolify configuration, public HTTPS, and `/healthz` as one
   contract.

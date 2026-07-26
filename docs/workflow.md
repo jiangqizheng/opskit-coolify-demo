@@ -169,15 +169,21 @@ click.
 
 ## Release And Delivery
 
-The production artifact is an immutable `linux/amd64` GHCR image. Build it only
-from a clean committed revision and pass that revision as `DEMO_RELEASE`:
+The production artifact is an immutable public `linux/amd64` image in Tencent
+Cloud TCR Personal Edition's Beijing endpoint. Build it only from a clean
+committed revision and pass that revision as `DEMO_RELEASE`:
 
 ```bash
 docker buildx build --platform linux/amd64 \
   --build-arg DEMO_RELEASE=<git-commit> \
-  --tag ghcr.io/jiangqizheng/opskit-coolify-demo:<git-commit> \
+  --tag ccr.ccs.tencentyun.com/opskit/coolify-demo:<git-commit> \
   --push .
 ```
+
+The `opskit/coolify-demo` repository is public so the Beijing Coolify cell does
+not need a long-lived registry credential. Coolify must still pin the image by
+the OCI manifest digest returned after the push; the source commit tag is only
+a human-readable release locator.
 
 OpsKit owns the fixed Coolify and Cloudflare execution contract. Do not create
 or edit provider resources manually after adoption. The required public proof

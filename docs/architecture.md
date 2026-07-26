@@ -98,7 +98,9 @@ facts, source code, decisions, and runtime dependencies must live outside
 
 ## Production Runtime
 
-- Artifact: public GHCR OCI image, pinned by `sha256` digest.
+- Artifact: public Tencent Cloud TCR Personal Edition OCI image at the Beijing
+  endpoint `ccr.ccs.tencentyun.com/opskit/coolify-demo`, pinned by `sha256`
+  digest.
 - Platform: Coolify Cloud application on the fixed `bj-2c8g` server.
 - Architecture: `linux/amd64`.
 - Listener: `0.0.0.0:3000`.

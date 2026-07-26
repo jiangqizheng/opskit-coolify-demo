@@ -18,3 +18,5 @@ attempt.
   baked release metadata and a container health check.
 - Corrected the project contract to stateless persistence and documented the
   fixed OpsKit/Coolify/Cloudflare production acceptance path.
+- Selected a dedicated public Beijing TCR repository for immutable release
+  images so the Coolify cell can pull without a stored registry secret.
