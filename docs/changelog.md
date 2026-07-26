@@ -20,3 +20,5 @@ attempt.
   fixed OpsKit/Coolify/Cloudflare production acceptance path.
 - Selected a dedicated public Beijing TCR repository for immutable release
   images so the Coolify cell can pull without a stored registry secret.
+- Replaced the incomplete custom production wrapper with the official Nitro
+  Node server output and added browser coverage for hashed stylesheet delivery.

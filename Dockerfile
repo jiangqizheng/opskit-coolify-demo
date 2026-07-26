@@ -13,7 +13,6 @@ RUN --mount=type=cache,id=coolify-demo-pnpm-store,target=/pnpm/store,sharing=loc
     pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
-RUN pnpm prune --prod
 
 FROM node:24-alpine AS runtime
 
@@ -27,11 +26,8 @@ ENV PORT=3000
 ENV DEMO_RELEASE=${DEMO_RELEASE}
 ENV DEMO_REGION=${DEMO_REGION}
 ENV DEMO_DOMAIN=${DEMO_DOMAIN}
-COPY --from=build --chown=node:node /app/package.json ./package.json
-COPY --from=build --chown=node:node /app/node_modules ./node_modules
-COPY --from=build --chown=node:node /app/dist ./dist
-COPY --chown=node:node server.mjs ./server.mjs
+COPY --from=build --chown=node:node /app/.output ./.output
 EXPOSE 3000
 USER node
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD ["node", "-e", "fetch('http://127.0.0.1:3000/healthz').then((response)=>{if(!response.ok)process.exit(1)}).catch(()=>process.exit(1))"]
-CMD ["node", "server.mjs"]
+CMD ["node", ".output/server/index.mjs"]

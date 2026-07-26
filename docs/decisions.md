@@ -34,3 +34,16 @@ notes or failed attempts.
 - Impact: Every release starts from a clean Git commit, and OpsKit verifies the
   registry digest, Coolify configuration, public HTTPS, and `/healthz` as one
   contract.
+
+## 2026-07-27 - Use Nitro For The Node And Docker Runtime
+
+- Decision: Build TanStack Start with the Nitro Vite plugin and run the
+  generated `node-server` entry from `.output/server/index.mjs`. Copy only the
+  self-contained `.output` directory into the runtime image.
+- Reason: The first custom Node wrapper forwarded SSR requests but did not own
+  hashed client assets, so the public HTML rendered without CSS or hydration
+  bundles. Nitro is the package-supported Node/Docker deployment boundary and
+  keeps static serving aligned with the Start build manifest.
+- Impact: `pnpm run build` now proves the deployable server bundle, `pnpm start`
+  runs that exact output, and Playwright verifies both stylesheet delivery and
+  computed styling before a release image can be promoted.

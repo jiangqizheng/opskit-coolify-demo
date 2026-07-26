@@ -9,6 +9,13 @@ pnpm install
 pnpm run dev
 ```
 
+Production-shaped local run:
+
+```bash
+pnpm run build
+pnpm start
+```
+
 
 ## Validation
 

@@ -193,6 +193,8 @@ is:
 - HTTP redirects to HTTPS;
 - TLS covers `coolify-demo.perphq.com`;
 - `/` returns a direct 2xx response and the expected demo title;
+- the hashed stylesheet and client entry return direct 2xx responses with the
+  correct content types, and Playwright confirms the computed page styling;
 - `/healthz` reports `status=ok`, the expected service, region, domain, and
   source release;
 - Coolify reports the configured OCI digest and a finished deployment.
