@@ -167,6 +167,30 @@ browser attempts fail in different ways, stop and collect logs, route/API
 responses, cookies/session state, and port ownership instead of continuing to
 click.
 
+## Release And Delivery
+
+The production artifact is an immutable `linux/amd64` GHCR image. Build it only
+from a clean committed revision and pass that revision as `DEMO_RELEASE`:
+
+```bash
+docker buildx build --platform linux/amd64 \
+  --build-arg DEMO_RELEASE=<git-commit> \
+  --tag ghcr.io/jiangqizheng/opskit-coolify-demo:<git-commit> \
+  --push .
+```
+
+OpsKit owns the fixed Coolify and Cloudflare execution contract. Do not create
+or edit provider resources manually after adoption. The required public proof
+is:
+
+- Cloudflare DNS-only A record resolves to the `bj-2c8g` origin;
+- HTTP redirects to HTTPS;
+- TLS covers `coolify-demo.perphq.com`;
+- `/` returns a direct 2xx response and the expected demo title;
+- `/healthz` reports `status=ok`, the expected service, region, domain, and
+  source release;
+- Coolify reports the configured OCI digest and a finished deployment.
+
 Playwright tests should prefer role-based locators and user-visible assertions.
 Avoid fixed sleeps; wait for observable UI state instead.
 

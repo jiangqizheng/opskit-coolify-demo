@@ -12,7 +12,8 @@
 - Server state: TanStack Query
 - Styling: Tailwind CSS
 - Validation: Zod when schema validation is needed
-- Persistence: postgres (authoritative, distributed)
+- Persistence: none; the deployed service is stateless and fully derived from
+  its immutable container image
 - Auth: Clerk when authentication is needed
 - Testing: Vitest and Playwright
 - Preview: Portless with managed ports starting at `9030`
@@ -83,7 +84,8 @@ facts, source code, decisions, and runtime dependencies must live outside
 
 ## Data And API Boundaries
 
-- Add persistence only when the product needs it.
+- The current product owns no database, volume, queue, or mutable server-side
+  business data. Add persistence only when a real product requirement appears.
 - TanStack Query and its Router SSR integration are included in the base.
 - Add Drizzle, Clerk, Zod, TanStack Form, TanStack Table, or TanStack Store only
   when the corresponding project capability is selected.
@@ -93,6 +95,17 @@ facts, source code, decisions, and runtime dependencies must live outside
   truth.
 - Validate required data at system boundaries; do not hide missing required data
   with downstream defaults.
+
+## Production Runtime
+
+- Artifact: public GHCR OCI image, pinned by `sha256` digest.
+- Platform: Coolify Cloud application on the fixed `bj-2c8g` server.
+- Architecture: `linux/amd64`.
+- Listener: `0.0.0.0:3000`.
+- Health: container health check plus `GET /healthz`.
+- Release identity: the source commit, region, and public hostname are baked
+  into the image through fixed Docker build arguments.
+- Public hostname: `coolify-demo.perphq.com` with Cloudflare DNS-only A routing.
 
 ## Environment
 

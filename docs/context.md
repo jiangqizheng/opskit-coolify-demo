@@ -9,7 +9,9 @@ Global stateless deployment demo for OpsKit and Coolify Cloud
 
 ## Target User
 
-Replace with the intended user and the problem this project solves.
+The solo OpsKit operator validating that a PF-managed project can move from
+source code to an observable public Coolify deployment without manual provider
+steps.
 
 ## Scope
 
@@ -19,7 +21,9 @@ In scope:
 
 Out of scope:
 
-- Replace with explicit non-goals.
+- Product accounts, authentication, databases, durable user data, background
+  jobs, multi-region failover, and business functionality beyond the delivery
+  proof.
 
 ## Active Surfaces
 
@@ -29,6 +33,7 @@ Out of scope:
 
 - System shape: hosted_product
 - Data authority: server
+- Persistence: none; runtime state is derived from the immutable image
 - Environment model: local_production
 
 - Keep user-facing behavior aligned with this document.

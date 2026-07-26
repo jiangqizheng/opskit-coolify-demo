@@ -15,6 +15,20 @@ notes or failed attempts.
 
 ## 2026-07-26 - Select System Shape
 
-- Decision: Use `hosted_product` with `postgres` persistence and the `local_production` environment model.
-- Reason: PF inferred this boundary from the product intent before initialization.
-- Impact: Data authority is `server`; storage or deployment changes must preserve this boundary.
+- Decision: Use `hosted_product` with no persistence and the
+  `local_production` environment model.
+- Reason: This project proves stateless delivery and owns no mutable business
+  data; the initial PostgreSQL profile was an incorrect scaffold inference.
+- Impact: Runtime state is derived from the immutable image. Do not provision a
+  database, volume, backup contract, or migration path unless the product scope
+  changes.
+
+## 2026-07-27 - Publish One Immutable AMD64 Image
+
+- Decision: Publish a public GHCR image for `linux/amd64`, pin Coolify to its
+  OCI digest, and bake source release, region, and hostname into the artifact.
+- Reason: The Beijing cell should only pull and run an already verified image;
+  it should not compile source or infer release identity at runtime.
+- Impact: Every release starts from a clean Git commit, and OpsKit verifies the
+  registry digest, Coolify configuration, public HTTPS, and `/healthz` as one
+  contract.
