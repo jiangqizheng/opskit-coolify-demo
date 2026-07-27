@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "project": {
+    "id": "coolify-demo",
+    "name": "OpsKit Coolify Demo",
+    "owner": "jiangqizheng",
+    "repository": "https://github.com/jiangqizheng/opskit-coolify-demo"
+  },
+  "placementProfile": "vps-paas",
+  "services": [
+    {
+      "id": "web",
+      "name": "Coolify Demo Web",
+      "kind": "ssr",
+      "environments": [
+        {
+          "name": "production",
+          "target": {
+            "id": "bj-2c8g-coolify-demo",
+            "kind": "coolify",
+            "provider": "coolify",
+            "executor": "coolify",
+            "region": "ap-beijing",
+            "originRef": null,
+            "connectionRef": "pf-env:coolify-primary",
+            "resourceRef": "coolify-application:tk82xecroodcuzydwdc4gtn1"
+          },
+          "desiredRelease": {
+            "sourceCommit": "9da116d607c122ba4178d4fe8a57f75a55a2a019",
+            "artifactDigest": "sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce",
+            "manifestHash": "sha256:dc7a7cb3dd9e8f4abf790fc0594dcb3eef10d521d2c8970ebd689fec5476a047",
+            "provenanceRef": null,
+            "migrationVersion": null,
+            "rollbackPredecessor": "sha256:87471d8ffdf7a915221978791fd3b16c5e47890082db592a2806f0772a6e376a",
+            "artifactRef": {
+              "kind": "container-image",
+              "uri": "oci://ccr.ccs.tencentyun.com/opskit/coolify-demo@sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce",
+              "digest": "sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce"
+            }
+          },
+          "healthContract": {
+            "process": "required",
+            "transport": "required",
+            "readiness": "required",
+            "domain": "required",
+            "dependency": "not-applicable"
+          },
+          "healthProbes": {
+            "process": {
+              "kind": "provider",
+              "endpointRef": null
+            },
+            "transport": {
+              "kind": "tcp-tls",
+              "endpointRef": "tls-probe:coolify-demo.perphq.com/443"
+            },
+            "readiness": {
+              "kind": "https",
+              "endpointRef": "https-probe:coolify-demo.perphq.com/healthz"
+            },
+            "domain": {
+              "kind": "https",
+              "endpointRef": "https-probe:coolify-demo.perphq.com/"
+            },
+            "dependency": {
+              "kind": "none",
+              "endpointRef": null
+            }
+          },
+          "healthFreshness": {
+            "process": {
+              "maxAgeMinutes": 5,
+              "allowedSources": [
+                "executor",
+                "provider"
+              ]
+            },
+            "transport": {
+              "maxAgeMinutes": 5,
+              "allowedSources": [
+                "probe"
+              ]
+            },
+            "readiness": {
+              "maxAgeMinutes": 5,
+              "allowedSources": [
+                "probe"
+              ]
+            },
+            "domain": {
+              "maxAgeMinutes": 10,
+              "allowedSources": [
+                "probe"
+              ]
+            },
+            "dependency": {
+              "maxAgeMinutes": null,
+              "allowedSources": [
+                "manual"
+              ]
+            }
+          },
+          "executionPolicy": {
+            "timeoutMs": 600000,
+            "maxAttempts": 2,
+            "rollbackMode": "manual",
+            "approvalMode": "operator"
+          },
+          "backupContract": {
+            "required": false,
+            "owner": "platform",
+            "destinationRef": null,
+            "retentionDays": null,
+            "rpoMinutes": null,
+            "restoreDrillMaxAgeMinutes": null,
+            "rtoMinutes": null,
+            "restoreProcedureRef": null
+          }
+        }
+      ]
+    }
+  ]
+}
