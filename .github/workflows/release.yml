@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-production
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ccr.ccs.tencentyun.com
+  IMAGE_REPOSITORY: ccr.ccs.tencentyun.com/opskit/coolify-demo
+
+jobs:
+  release:
+    name: Verify, build, and deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://coolify-demo.perphq.com
+
+    steps:
+      - name: Check out the immutable source revision
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify source contract
+        run: pnpm run verify
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify production-shaped application
+        run: pnpm run test:e2e
+
+      - name: Log in to Tencent TCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.TCR_USERNAME }}
+          password: ${{ secrets.TCR_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push immutable image
+        id: image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE_REPOSITORY }}:${{ github.sha }}
+            ${{ env.IMAGE_REPOSITORY }}:main
+          build-args: |
+            DEMO_RELEASE=${{ github.sha }}
+            DEMO_REGION=bj-2c8g
+            DEMO_DOMAIN=coolify-demo.perphq.com
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Write immutable release receipt
+        run: >-
+          pnpm release -- receipt
+          --source-commit "${{ github.sha }}"
+          --artifact-digest "${{ steps.image.outputs.digest }}"
+          --workflow-repository "${{ github.repository }}"
+          --workflow-run-id "${{ github.run_id }}"
+          --workflow-run-attempt "${{ github.run_attempt }}"
+          --output ".tmp/releases/${{ github.sha }}.json"
+
+      - name: Retain release receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.sha }}
+          path: .tmp/releases/${{ github.sha }}.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Trigger Coolify deployment
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: >-
+          curl
+          --request GET
+          --fail-with-body
+          --silent
+          --show-error
+          --connect-timeout 10
+          --max-time 30
+          --output /dev/null
+          --header "Authorization: Bearer ${COOLIFY_TOKEN}"
+          "${COOLIFY_WEBHOOK}"
+
+      - name: Verify public release
+        run: pnpm release -- verify --source-commit "${{ github.sha }}"

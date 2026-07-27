@@ -61,3 +61,19 @@ notes or failed attempts.
   checksum-pinned cloudflared container as one inspect/plan/apply/verify
   contract. The fixed Tunnel identity is not recreated silently; identity
   loss blocks until the contract is deliberately updated.
+
+## 2026-07-27 - Use GitHub Actions As The Build Plane
+
+- Decision: Make a push to `main` start the project-owned verification, AMD64
+  image build, TCR publication, Coolify deployment trigger and public release
+  verification. Keep build workloads off the Beijing runtime cell.
+- Reason: This is the closest maintainable Vercel-like path for many projects
+  while preserving the existing same-region registry and immutable artifacts.
+  Coolify officially supports GitHub Actions publishing a prebuilt image and
+  invoking an application deploy webhook.
+- Impact: GitHub production configuration needs a repository-scoped TCR push
+  credential, application webhook and deploy-only Coolify token. Every build
+  retains an immutable commit tag and digest-bearing receipt; the mutable
+  `main` tag is only a deployment channel. Full Coolify write credentials do not
+  enter project repositories. Activation remains blocked until the live app and
+  OpsKit reconciliation contract are migrated together.

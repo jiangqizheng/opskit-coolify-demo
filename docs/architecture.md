@@ -121,6 +121,30 @@ facts, source code, decisions, and runtime dependencies must live outside
 - HTTP policy: one hostname-scoped Cloudflare dynamic redirect preserves the
   path and query while returning 308 to HTTPS.
 
+## Delivery Automation
+
+- Build plane: GitHub Actions on `ubuntu-24.04`; the runtime cell never builds
+  normal releases.
+- Trigger: a push to `main`, serialized by one production concurrency group.
+- Gates: source contract, TypeScript/unit tests and production-shaped Playwright
+  acceptance complete before registry or provider writes.
+- Artifact locators: immutable full-commit tag plus mutable `main` deployment
+  channel in public Beijing TCR. The Buildx `sha256` digest is the artifact
+  identity.
+- Evidence: `scripts/release.ts` creates a private release receipt and polls the
+  public `/healthz` endpoint until it reports the triggering commit, fixed
+  region and fixed domain.
+- Deployment authority: an application-specific Coolify webhook plus a
+  deploy-only token. Project workflows never receive general Coolify write
+  authority.
+- Current activation boundary: the live app remains digest-pinned and the
+  OpsKit fixed executor owns production. Moving it to the `main` channel and
+  digest-from-receipt reconciliation is one future confirmed migration, not an
+  implicit consequence of adding the workflow file.
+- Preview boundary: a Coolify GitHub App may later own PR preview resources and
+  comments with preview-only secrets; it is not required for production image
+  releases and is not yet enabled.
+
 ## Environment
 
 Environment model: `local_production`

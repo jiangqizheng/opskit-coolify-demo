@@ -170,8 +170,47 @@ click.
 ## Release And Delivery
 
 The production artifact is an immutable public `linux/amd64` image in Tencent
-Cloud TCR Personal Edition's Beijing endpoint. Build it only from a clean
-committed revision and pass that revision as `DEMO_RELEASE`:
+Cloud TCR Personal Edition's Beijing endpoint. The project-owned GitHub Actions
+workflow is the normal release path: a push to `main` verifies source and the
+production-shaped browser contract, builds on a GitHub runner, publishes the
+image, retains a release receipt, triggers Coolify and waits for `/healthz` to
+report the exact Git commit.
+
+The `production` GitHub Environment owns these secret names:
+
+```text
+TCR_USERNAME
+TCR_PASSWORD
+COOLIFY_WEBHOOK
+COOLIFY_TOKEN
+```
+
+Use a TCR credential limited to pushing this image repository and a Coolify
+token with `deploy` permission only. The application-specific webhook chooses
+the deployment target. Do not give a project repository the team-wide Coolify
+`write`, `read:sensitive` or `root` capabilities.
+
+Each successful build publishes two locators:
+
+- `<git-commit>` is retained as the immutable rollback locator;
+- `main` is the deployment channel that the Docker-image application pulls when
+  its deploy webhook runs.
+
+Neither tag is accepted as release identity. The Buildx output digest, full Git
+commit, build arguments and GitHub run identity are written to a mode-`0600`
+`opskit.project-release-receipt` and uploaded as a 30-day workflow artifact.
+The public verification step must then observe that same Git commit.
+
+The live application is still configured with the previously accepted digest.
+Do not activate this workflow until one confirmed migration changes the Coolify
+application to the `main` deployment channel and OpsKit learns to reconcile the
+receipt digest plus observed runtime release instead of requiring a configured
+digest literal. Until then, the workflow remains a validated local contract and
+the existing fixed OpsKit executor remains the production owner.
+
+The equivalent manual build is a break-glass diagnostic, not the normal release
+path. Build only from a clean committed revision and pass that revision as
+`DEMO_RELEASE`:
 
 ```bash
 docker buildx build --platform linux/amd64 \
@@ -180,10 +219,15 @@ docker buildx build --platform linux/amd64 \
   --push .
 ```
 
-The `opskit/coolify-demo` repository is public so the Beijing Coolify cell does
-not need a long-lived registry credential. Coolify must still pin the image by
-the OCI manifest digest returned after the push; the source commit tag is only
-a human-readable release locator.
+The TCR repository is public so the Beijing Coolify cell does not need a
+long-lived registry credential. GitHub holds the push credential; Coolify holds
+only the public pull locator and its deploy-only trigger.
+
+PR previews are intentionally a later boundary. Coolify's GitHub App supports
+automatic PR deployments, scoped preview secrets and PR comments, but enabling
+it also creates ephemeral runtime resources and wildcard edge routing. Add it
+only after the production push path is stable; never expose production secrets
+to previews from public pull requests.
 
 OpsKit owns the fixed Coolify and Cloudflare execution contract. Do not create
 or edit provider resources manually after adoption. The required public proof

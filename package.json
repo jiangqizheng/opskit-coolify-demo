@@ -19,6 +19,7 @@
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
     "playwright:install": "playwright install chromium",
+    "release": "node scripts/release.ts",
     "intent": "node scripts/intent.mjs",
     "intent:list": "node scripts/intent.mjs list",
     "agent": "node scripts/agent.mjs",

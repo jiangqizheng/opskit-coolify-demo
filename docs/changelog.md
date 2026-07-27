@@ -27,3 +27,8 @@ attempt.
   checksum-pinned connector contract.
 - Updated the public demo and browser acceptance to describe and prove the
   actual Tunnel-based edge path.
+- Added a local GitHub Actions release contract for Vercel-like push-to-deploy:
+  verify, production-shaped Playwright, GitHub-runner AMD64 build, immutable TCR
+  receipt, deploy-only Coolify webhook and exact public release verification.
+  The live digest-pinned application and GitHub production secrets were not
+  changed; activation remains a separate confirmed migration.
