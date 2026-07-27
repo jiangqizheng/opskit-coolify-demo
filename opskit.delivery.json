@@ -25,19 +25,7 @@
             "connectionRef": "pf-env:coolify-primary",
             "resourceRef": "coolify-application:tk82xecroodcuzydwdc4gtn1"
           },
-          "desiredRelease": {
-            "sourceCommit": "9da116d607c122ba4178d4fe8a57f75a55a2a019",
-            "artifactDigest": "sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce",
-            "manifestHash": "sha256:dc7a7cb3dd9e8f4abf790fc0594dcb3eef10d521d2c8970ebd689fec5476a047",
-            "provenanceRef": null,
-            "migrationVersion": null,
-            "rollbackPredecessor": "sha256:87471d8ffdf7a915221978791fd3b16c5e47890082db592a2806f0772a6e376a",
-            "artifactRef": {
-              "kind": "container-image",
-              "uri": "oci://ccr.ccs.tencentyun.com/opskit/coolify-demo@sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce",
-              "digest": "sha256:ead0bd78c5799d4148d306aaa64468375806972875948debbf282edb267ce9ce"
-            }
-          },
+          "desiredRelease": null,
           "healthContract": {
             "process": "required",
             "transport": "required",

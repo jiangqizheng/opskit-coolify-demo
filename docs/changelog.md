@@ -30,6 +30,7 @@ attempt.
 - Added a local GitHub Actions release contract for Vercel-like push-to-deploy:
   verify, production-shaped Playwright, GitHub-runner AMD64 build, immutable TCR
   receipt, deploy-only Coolify webhook and exact public release verification.
-  The live digest-pinned application and GitHub production secrets were not
-  changed; `AUTO_DEPLOY_ENABLED` defaults closed, so activation remains a
-  separate confirmed migration.
+  Activation then created the GitHub `production` environment, installed the
+  four secret references, switched Coolify from the old digest to the TCR
+  `main` channel and moved OpsKit to non-competing GitHub Actions observation.
+  `AUTO_DEPLOY_ENABLED` remains the immediate stop switch for future pushes.

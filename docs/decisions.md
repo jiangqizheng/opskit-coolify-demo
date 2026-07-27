@@ -74,6 +74,8 @@ notes or failed attempts.
 - Impact: GitHub production configuration needs a repository-scoped TCR push
   credential, application webhook and deploy-only Coolify token. Every build
   retains an immutable commit tag and digest-bearing receipt; the mutable
-  `main` tag is only a deployment channel. Full Coolify write credentials do not
-  enter project repositories. Activation remains blocked until the live app and
-  OpsKit reconciliation contract are migrated together.
+  `main` tag is only a deployment channel. The confirmed activation moved the
+  live app and OpsKit observation contract together; routine pushes no longer
+  use the fixed OpsKit deploy executor. The pre-launch pilot temporarily reuses
+  the team `read`/`write`/`deploy` token and must replace it with deploy-only
+  authority before real products or data use this boundary.

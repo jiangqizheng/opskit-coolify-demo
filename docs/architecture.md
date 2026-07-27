@@ -136,13 +136,15 @@ facts, source code, decisions, and runtime dependencies must live outside
 - Evidence: `scripts/release.ts` creates a private release receipt and polls the
   public `/healthz` endpoint until it reports the triggering commit, fixed
   region and fixed domain.
-- Deployment authority: an application-specific Coolify webhook plus a
-  deploy-only token. Project workflows never receive general Coolify write
-  authority.
-- Current activation boundary: the live app remains digest-pinned and the
-  OpsKit fixed executor owns production. Moving it to the `main` channel and
-  digest-from-receipt reconciliation is one future confirmed migration, not an
-  implicit consequence of adding the workflow file.
+- Deployment authority: an application-specific Coolify webhook plus a token
+  with `deploy` permission. The current pre-launch pilot reuses the existing
+  team token with `read`, `write` and `deploy`; replace it with a deploy-only
+  token before a real product or production data enters this boundary.
+- Active delivery mode: Coolify follows the TCR `main` channel and GitHub
+  Actions owns routine publication. `opskit.delivery.json` deliberately has no
+  static `desiredRelease`; the workflow receipt records the immutable digest
+  while the public `/healthz` commit and provider state prove the running
+  release. OpsKit observes this mode without offering a competing deploy plan.
 - Preview boundary: a Coolify GitHub App may later own PR preview resources and
   comments with preview-only secrets; it is not required for production image
   releases and is not yet enabled.

@@ -194,8 +194,10 @@ without deleting workflow history or credentials.
 
 Use a TCR credential limited to pushing this image repository and a Coolify
 token with `deploy` permission only. The application-specific webhook chooses
-the deployment target. Do not give a project repository the team-wide Coolify
-`write`, `read:sensitive` or `root` capabilities.
+the deployment target. The current pre-launch pilot temporarily reuses the
+existing `read`/`write`/`deploy` team token; replace it before this boundary
+contains a real product or production data. Never grant `read:sensitive` or
+`root` to the project workflow.
 
 Each successful build publishes two locators:
 
@@ -208,12 +210,11 @@ commit, build arguments and GitHub run identity are written to a mode-`0600`
 `opskit.project-release-receipt` and uploaded as a 30-day workflow artifact.
 The public verification step must then observe that same Git commit.
 
-The live application is still configured with the previously accepted digest.
-Do not activate this workflow until one confirmed migration changes the Coolify
-application to the `main` deployment channel and OpsKit learns to reconcile the
-receipt digest plus observed runtime release instead of requiring a configured
-digest literal. Until then, the workflow remains a validated local contract and
-the existing fixed OpsKit executor remains the production owner.
+The live application follows the `main` deployment channel. In this mode the
+repository descriptor keeps `desiredRelease: null`: the workflow receipt owns
+the immutable build digest and `/healthz` owns runtime source identity. OpsKit
+must observe the fixed repository/channel, full 40-character public release and
+provider health without offering a competing deploy plan.
 
 The equivalent manual build is a break-glass diagnostic, not the normal release
 path. Build only from a clean committed revision and pass that revision as
