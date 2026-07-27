@@ -141,8 +141,9 @@ facts, source code, decisions, and runtime dependencies must live outside
   team token with `read`, `write` and `deploy`; replace it with a deploy-only
   token before a real product or production data enters this boundary.
 - Active delivery mode: Coolify follows the TCR `main` channel and GitHub
-  Actions owns routine publication. `opskit.delivery.json` deliberately has no
-  static `desiredRelease`; the workflow receipt records the immutable digest
+  Actions owns routine publication. `opskit.delivery.json` declares
+  `releaseOwner: external-ci` and deliberately has no static `desiredRelease`;
+  the workflow receipt records the immutable digest
   while the public `/healthz` commit and provider state prove the running
   release. OpsKit observes this mode without offering a competing deploy plan.
 - Preview boundary: a Coolify GitHub App may later own PR preview resources and

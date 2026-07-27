@@ -211,10 +211,11 @@ commit, build arguments and GitHub run identity are written to a mode-`0600`
 The public verification step must then observe that same Git commit.
 
 The live application follows the `main` deployment channel. In this mode the
-repository descriptor keeps `desiredRelease: null`: the workflow receipt owns
-the immutable build digest and `/healthz` owns runtime source identity. OpsKit
-must observe the fixed repository/channel, full 40-character public release and
-provider health without offering a competing deploy plan.
+repository descriptor declares `releaseOwner: external-ci` and keeps
+`desiredRelease: null`: the workflow receipt owns the immutable build digest
+and `/healthz` owns runtime source identity. OpsKit must observe the fixed
+repository/channel, full 40-character public release and provider health
+without offering a competing deploy plan.
 
 The equivalent manual build is a break-glass diagnostic, not the normal release
 path. Build only from a clean committed revision and pass that revision as

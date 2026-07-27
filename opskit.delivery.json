@@ -15,6 +15,7 @@
       "environments": [
         {
           "name": "production",
+          "releaseOwner": "external-ci",
           "target": {
             "id": "bj-2c8g-coolify-demo",
             "kind": "coolify",
