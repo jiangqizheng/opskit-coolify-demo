@@ -189,18 +189,33 @@ OpsKit owns the fixed Coolify and Cloudflare execution contract. Do not create
 or edit provider resources manually after adoption. The required public proof
 is:
 
-- Cloudflare DNS-only A record resolves to the `bj-2c8g` origin;
+- a proxied Cloudflare CNAME points to the fixed `cfargotunnel.com` target;
+- the remote-managed Tunnel ingress forwards HTTPS to node-local Traefik at
+  `https://127.0.0.1:443` with the public Host header and SNI;
+- the checksum-pinned cloudflared connector on `bj-prod` runs with host
+  networking, `unless-stopped`, a mode-0400 token file, loopback metrics and
+  multiple HA connections;
+- a hostname-scoped Cloudflare rule redirects HTTP to HTTPS with status 308;
 - HTTP redirects to HTTPS;
 - TLS covers `coolify-demo.perphq.com`;
-- `/` returns a direct 2xx response and the expected demo title;
-- the hashed stylesheet and client entry return direct 2xx responses with the
+- `/` returns a public 2xx response and the expected demo title;
+- the hashed stylesheet and client entry return public 2xx responses with the
   correct content types, and Playwright confirms the computed page styling;
 - `/healthz` reports `status=ok`, the expected service, region, domain, and
   source release;
 - Coolify reports the configured OCI digest and a finished deployment.
 
+The provider and host edge state is owned by OpsKit's fixed
+`cloudflare:coolify-demo-edge` inspect/plan/apply/verify contract. Do not edit
+the Tunnel, DNS record, redirect rule, token file or connector container as
+independent manual resources after adoption.
+
 Playwright tests should prefer role-based locators and user-visible assertions.
 Avoid fixed sleeps; wait for observable UI state instead.
+The self-managed Playwright server builds and starts the Nitro production
+output on an isolated test port so stylesheet MIME and hashed-asset assertions
+exercise the same boundary as the release image. Use `PW_SKIP_WEBSERVER=1` only
+for an already-checked external deployment.
 
 ## Error UI
 

@@ -47,3 +47,17 @@ notes or failed attempts.
 - Impact: `pnpm run build` now proves the deployable server bundle, `pnpm start`
   runs that exact output, and Playwright verifies both stylesheet delivery and
   computed styling before a release image can be promoted.
+
+## 2026-07-27 - Put The Beijing Cell Behind Cloudflare Tunnel
+
+- Decision: Route `coolify-demo.perphq.com` through a proxied Cloudflare CNAME
+  and a remote-managed Tunnel whose connector forwards to node-local Traefik
+  over HTTPS. Keep HTTP-to-HTTPS as one hostname-scoped 308 rule.
+- Reason: The Beijing node's direct public HTTP/HTTPS path is intercepted for
+  this hostname even though Traefik and the application are healthy locally.
+  Tunnel provides a reproducible outbound connector path without exposing the
+  Coolify control plane or changing the application contract.
+- Impact: OpsKit owns Tunnel configuration, DNS, redirect policy and the
+  checksum-pinned cloudflared container as one inspect/plan/apply/verify
+  contract. The fixed Tunnel identity is not recreated silently; identity
+  loss blocks until the contract is deliberately updated.

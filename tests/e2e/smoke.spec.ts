@@ -4,6 +4,7 @@ test('home page renders', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: /ship the small idea/i })).toBeVisible()
   await expect(page.getByText('bj-2c8g', { exact: true })).toBeVisible()
+  await expect(page.getByText('Cloudflare Tunnel', { exact: true })).toBeVisible()
   const stylesheetHref = await page.locator('link[rel="stylesheet"]').first().getAttribute('href')
   expect(stylesheetHref).toBeTruthy()
   const stylesheet = await page.request.get(stylesheetHref!)

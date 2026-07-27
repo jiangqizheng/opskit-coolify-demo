@@ -111,7 +111,15 @@ facts, source code, decisions, and runtime dependencies must live outside
 - Health: container health check plus `GET /healthz`.
 - Release identity: the source commit, region, and public hostname are baked
   into the image through fixed Docker build arguments.
-- Public hostname: `coolify-demo.perphq.com` with Cloudflare DNS-only A routing.
+- Public hostname: `coolify-demo.perphq.com` behind a proxied Cloudflare CNAME.
+- Public edge: a remote-managed Cloudflare Tunnel forwards HTTPS to
+  node-local Traefik at `https://127.0.0.1:443`; Host and SNI remain the public
+  hostname.
+- Connector: a checksum-pinned cloudflared container on `bj-prod` uses host
+  networking, `unless-stopped`, a mode-0400 token file owned by `65532:65532`,
+  and loopback-only metrics.
+- HTTP policy: one hostname-scoped Cloudflare dynamic redirect preserves the
+  path and query while returning 308 to HTTPS.
 
 ## Environment
 

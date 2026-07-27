@@ -6,7 +6,7 @@ const proofPoints = [
   ['源代码', 'PF-managed repo', '可继续开发'],
   ['运行时', 'Coolify Cloud', 'Docker cell'],
   ['节点', 'bj-2c8g', '北京'],
-  ['入口', 'coolify-demo.perphq.com', 'DNS-only A'],
+  ['入口', 'coolify-demo.perphq.com', 'Cloudflare Tunnel'],
 ] as const
 
 function Home() {
@@ -63,7 +63,7 @@ function Home() {
         <article className="demo-card rise-in" style={{ animationDelay: '160ms' }}>
           <p className="island-kicker mb-3">02 / route</p>
           <h2 className="demo-section-title mb-2">One public hostname</h2>
-          <p className="demo-muted m-0 text-sm leading-7">Cloudflare 只提供 DNS，流量直接到 Coolify cell，边界清楚可排查。</p>
+          <p className="demo-muted m-0 text-sm leading-7">Cloudflare Tunnel 把公网流量送到节点本机 Traefik，源站不再依赖北京公网域名入口。</p>
         </article>
         <article className="demo-card rise-in" style={{ animationDelay: '240ms' }}>
           <p className="island-kicker mb-3">03 / prove</p>
@@ -83,7 +83,7 @@ function Home() {
         <div className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
           <div className="demo-list-item"><strong className="mr-2">本地</strong><span className="demo-muted">PF preview + Playwright</span></div>
           <div className="demo-list-item"><strong className="mr-2">线上</strong><span className="demo-muted">Coolify Cloud + bj-2c8g</span></div>
-          <div className="demo-list-item"><strong className="mr-2">域名</strong><span className="demo-muted">DNS-only A + direct HTTP/HTTPS</span></div>
+          <div className="demo-list-item"><strong className="mr-2">域名</strong><span className="demo-muted">proxied CNAME + Tunnel → Traefik</span></div>
           <div className="demo-list-item"><strong className="mr-2">恢复</strong><span className="demo-muted">固定清理合同，不留孤儿资源</span></div>
         </div>
       </section>

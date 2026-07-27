@@ -11,7 +11,7 @@ function About() {
         <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr]">
           <div className="space-y-5 text-sm leading-8 text-[var(--sea-ink-soft)]">
             <p className="m-0">项目由 proj-factory 初始化，代码在 GitHub，镜像使用固定 digest，Coolify 只负责北京节点上的运行生命周期。</p>
-            <p className="m-0">Cloudflare 的唯一写入是 `coolify-demo.perphq.com` 的 DNS-only A 记录。没有代理、没有隐藏 CNAME，也没有把数据库塞进这个无状态演练。</p>
+            <p className="m-0">Cloudflare 使用 proxied CNAME、remote-managed Tunnel ingress 和单域名 308 规则；北京节点上的固定 cloudflared connector 只把流量交给本机 Traefik。这个无状态演练仍然没有数据库。</p>
             <p className="m-0">健康检查走 <a href="/healthz">/healthz</a>，页面和健康响应都不依赖外部业务数据。</p>
           </div>
           <dl className="space-y-4 rounded-2xl border border-[var(--line)] bg-[color-mix(in_oklab,var(--chip-bg)_84%,transparent)] p-5 text-sm">

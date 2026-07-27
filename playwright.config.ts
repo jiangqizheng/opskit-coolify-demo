@@ -16,7 +16,9 @@ function readConfiguredPort() {
 }
 
 const port = readConfiguredPort()
-const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${port}`
+const usesExternalServer = Boolean(process.env.PW_SKIP_WEBSERVER)
+const testPort = usesExternalServer ? port : Number(process.env.PW_TEST_PORT || port + 10_000)
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${testPort}`
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -32,10 +34,10 @@ export default defineConfig({
   webServer: process.env.PW_SKIP_WEBSERVER
     ? undefined
     : {
-        command: 'pnpm run dev:app',
+        command: `pnpm run build && HOST=127.0.0.1 PORT=${testPort} pnpm start`,
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
-        timeout: 30_000,
+        reuseExistingServer: false,
+        timeout: 60_000,
       },
   projects: [
     {

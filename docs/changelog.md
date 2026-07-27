@@ -22,3 +22,8 @@ attempt.
   images so the Coolify cell can pull without a stored registry secret.
 - Replaced the incomplete custom production wrapper with the official Nitro
   Node server output and added browser coverage for hashed stylesheet delivery.
+- Replaced the unusable direct Beijing public route with a proxied Cloudflare
+  Tunnel to node-local Traefik, including a fixed 308 rule and OpsKit-managed
+  checksum-pinned connector contract.
+- Updated the public demo and browser acceptance to describe and prove the
+  actual Tunnel-based edge path.
