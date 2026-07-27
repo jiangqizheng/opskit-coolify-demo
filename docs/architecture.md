@@ -126,6 +126,8 @@ facts, source code, decisions, and runtime dependencies must live outside
 - Build plane: GitHub Actions on `ubuntu-24.04`; the runtime cell never builds
   normal releases.
 - Trigger: a push to `main`, serialized by one production concurrency group.
+- Activation: repository variable `AUTO_DEPLOY_ENABLED` must equal `true`;
+  missing configuration skips the whole production job.
 - Gates: source contract, TypeScript/unit tests and production-shaped Playwright
   acceptance complete before registry or provider writes.
 - Artifact locators: immutable full-commit tag plus mutable `main` deployment

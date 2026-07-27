@@ -185,6 +185,13 @@ COOLIFY_WEBHOOK
 COOLIFY_TOKEN
 ```
 
+The repository variable `AUTO_DEPLOY_ENABLED` is the activation gate. Missing
+or any value other than the exact string `true` skips the entire production
+job, including tests, registry login and deployment. Publish the workflow with
+the gate absent first; set it to `true` only after secrets and the Coolify image
+channel have been verified. Disabling it stops future automatic releases
+without deleting workflow history or credentials.
+
 Use a TCR credential limited to pushing this image repository and a Coolify
 token with `deploy` permission only. The application-specific webhook chooses
 the deployment target. Do not give a project repository the team-wide Coolify

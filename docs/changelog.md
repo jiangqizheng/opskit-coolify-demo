@@ -31,4 +31,5 @@ attempt.
   verify, production-shaped Playwright, GitHub-runner AMD64 build, immutable TCR
   receipt, deploy-only Coolify webhook and exact public release verification.
   The live digest-pinned application and GitHub production secrets were not
-  changed; activation remains a separate confirmed migration.
+  changed; `AUTO_DEPLOY_ENABLED` defaults closed, so activation remains a
+  separate confirmed migration.

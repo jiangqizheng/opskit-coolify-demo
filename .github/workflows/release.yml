@@ -19,6 +19,7 @@ env:
 jobs:
   release:
     name: Verify, build, and deploy
+    if: vars.AUTO_DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:
